@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Page</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      color: #333;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      padding: 8px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .main-image {
+      flex: 1;
+      min-width: 300px;
+    }
+    .main-image img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .product-info {
+      flex: 1;
+      min-width: 300px;
+    }
+    .product-info h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .product-info p {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .gallery {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .gallery img {
+      width: 80px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Rewoven Store</h2>
+    <div class="search-bar">
+      <input type="search" placeholder="Search for products...">
+    </div>
+  </header>
+
+  <main>
+    <div class="main-image">
+      <img id="mainImage" src="https://via.placeholder.com/400x500" alt="Product Image">
+    </div>
+    <div class="product-info">
+      <h1 id="productName">Product Name</h1>
+      <p id="productDesc">Product description goes here. It tells you all about the product and what makes it special.</p>
+    </div>
+
+    <div class="gallery" id="productGallery">
+      <!-- Thumbnail images will go here -->
+    </div>
+  </main>
+
+  <script>
+    // Mock product data
+    const productData = {
+      name: "Vintage Denim Jacket",
+      description: "This vintage denim jacket is perfect for all seasons. Stylish, comfy, and sustainable.",
+      main_image: "https://via.placeholder.com/400x500?text=Main+Image",
+      gallery_images: [
+        "https://via.placeholder.com/100x120?text=1",
+        "https://via.placeholder.com/100x120?text=2",
+        "https://via.placeholder.com/100x120?text=3",
+        "https://via.placeholder.com/100x120?text=4"
+      ]
+    };
+
+    // Render product details
+    document.getElementById("productName").textContent = productData.name;
+    document.getElementById("productDesc").textContent = productData.description;
+    document.getElementById("mainImage").src = productData.main_image;
+
+    const galleryContainer = document.getElementById("productGallery");
+    productData.gallery_images.forEach(url => {
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "Product Thumbnail";
+      img.onclick = () => document.getElementById("mainImage").src = url;
+      galleryContainer.appendChild(img);
+    });
+  </script>
+</body>
+</html>
