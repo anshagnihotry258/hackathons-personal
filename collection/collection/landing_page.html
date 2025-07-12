@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rewoven</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" />
+  <style>
+    :root {
+      --font-family: 'Poppins', sans-serif;
+      --radius: 6px;
+      --accent: #78c952;
+
+      /* Dark Mode Defaults */
+      --bg-page: #121212;
+      --bg-panel: #1e1e1e;
+      --bg-card: #282828;
+      --bg-input: #2a2a2a;
+      --text-primary: #e0e0e0;
+      --text-secondary: #bdbdbd;
+      --border: #3a3a3a;
+    }
+
+    body.light {
+      --bg-page: #f5f5f5;
+      --bg-panel: #ffffff;
+      --bg-card: #fafafa;
+      --bg-input: #ededed;
+      --text-primary: #212121;
+      --text-secondary: #555;
+      --border: #cccccc;
+    }
+
+    /* Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    main {
+      width: 100%;
+      background-color: var(--bg-panel);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand img.logo {
+      height: 60px;
+      width: 60px;
+      border-radius: 50%;
+    }
+
+    .brand h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-controls button {
+      background-color: var(--accent);
+      border: none;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .header-controls img {
+      height: 24px;
+      transition: transform 0.2s ease;
+    }
+
+    .header-controls button:hover img {
+      transform: scale(1.1);
+    }
+
+    /* Toggle Switch */
+    .theme-toggle {
+      position: relative;
+      width: 50px;
+      height: 24px;
+    }
+
+    .theme-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border);
+      border-radius: 34px;
+      transition: background-color 0.3s ease;
+    }
+
+    .slider::before {
+      position: absolute;
+      content: '';
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      top: 3px;
+      background-color: var(--bg-panel);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    .theme-toggle input:checked + .slider::before {
+      transform: translateX(26px);
+    }
+
+    /* Search */
+    .search-bar {
+      display: flex;
+      margin: 20px 0;
+      gap: 12px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 20px;
+      background-color: var(--bg-input);
+      border: 2px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: var(--bg-panel);
+    }
+
+    .search-bar button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 20px;
+      background-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .search-bar img {
+      height: 20px;
+    }
+
+    /* Hero */
+    .hero-images {
+      background-color: var(--bg-card);
+      padding: 2rem;
+      text-align: center;
+      border-radius: var(--radius);
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Categories */
+    .categories {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      grid-template-rows: auto auto;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .category-card {
+      background-color: var(--bg-card);
+      padding: 1rem;
+      text-align: center;
+      border-radius: var(--radius);
+      transition: transform 0.25s ease, background-color 0.25s ease;
+      font-size:x-large;
+    }
+
+    .category-card:hover {
+      background-color: var(--accent);
+      transform: scale(1.05);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Products */
+    .product-listings {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .product-card {
+      background-color: var(--bg-card);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 220px;
+      height: 300px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+      background-color: var(--accent);
+      color: #fff;
+    }
+    .carousel {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+
+    .carousel img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: var(--radius);
+    }
+
+    .carousel-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
+
+    .carousel-text h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .carousel-text p {
+      font-size: 1.2rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      .brand h1 {
+        font-size: 1.4rem;
+      }
+
+      .search-bar {
+        flex-direction: column;
+      }
+
+      .search-bar button {
+        width: 100%;
+      }
+    }
+
+    .main-heading h1 {
+      margin: 40px 0 20px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+  </style>
+</head>
+<body>
+  <main role="main">
+    <header>
+      <div class="brand">
+        <img src="images/logo.jpg" alt="Rewoven Logo" class="logo" />
+        <h1>Rewoven</h1>
+      </div>
+      <div class="header-controls">
+        <button class="profile-button"><img src="images/profile.png" alt="Profile" /></button>
+        <button class="cart-button"><img src="images/cart.png" alt="Cart" /></button>
+        <label class="theme-toggle" aria-label="Toggle light/dark mode">
+          <input type="checkbox" id="themeSwitch">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <div class="search-bar">
+      <input type="text" placeholder="Search for clothes, categories..." />
+      <button><img src="images/search.png" alt="Search" /></button>
+    </div>
+
+    <div class="main-heading">
+      <h1>Featured Products</h1>
+    </div>
+
+    <div class="hero-images">
+      <div class="carousel">
+        <img id="carouselImage" src="images/banner1.jpg" alt="Hero Image">
+        <div class="carousel-text">
+          <h2>Shop Sustainably</h2>
+          <p>Style meets eco-conscious living. Discover our curated picks.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="main-heading">
+      <h1>Categories</h1>
+    </div>
+
+    <section class="categories">
+      <div class="category-card"><h3>Tops</h3></div>
+      <div class="category-card"><h3>Bottoms</h3></div>
+      <div class="category-card"><h3>Footwear</h3></div>
+      <div class="category-card"><h3>Accessories</h3></div>
+      <div class="category-card"><h3>Outerwear</h3></div>
+      <div class="category-card"><h3>Ethnic</h3></div>
+    </section>
+
+    <div class="main-heading">
+      <h1>Shop Now</h1>
+    </div>
+
+    <section class="product-listings">
+      <div class="product-card">Product 1</div>
+      <div class="product-card">Product 2</div>
+      <div class="product-card">Product 3</div>
+      <div class="product-card">Product 4</div>
+    </section>
+
+    <footer>
+      &copy; 2025 Rewoven. All rights reserved.
+    </footer>
+  </main>
+
+<script>
+  const themeToggle = document.getElementById('themeSwitch');
+  const profileButton = document.querySelector('.profile-button');
+  const cartButton = document.querySelector('.cart-button');
+  const body = document.body;
+
+  // Load saved preference
+  if (localStorage.getItem('theme') === 'light') {
+    body.classList.add('light');
+    themeToggle.checked = true;
+  }
+
+  themeToggle.addEventListener('change', () => {
+    if (themeToggle.checked) {
+      body.classList.add('light');
+      localStorage.setItem('theme', 'light');
+    } else {
+      body.classList.remove('light');
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+
+  profileButton.addEventListener('click', () => {
+    window.location.href = 'dashboard.html';
+  });
+  cartButton.addEventListener('click', () => {
+    window.location.href = 'cart.html';
+  });
+
+  // -----------------------
+  // Product Listing Logic
+  // -----------------------
+
+  const carouselImages = [
+    'https://via.placeholder.com/900x400?text=Banner+1',
+    'https://via.placeholder.com/900x400?text=Banner+2',
+    'https://via.placeholder.com/900x400?text=Banner+3'
+  ];
+
+  const products = [
+    {
+      id: 1,
+      name: "Vintage Denim Jacket",
+      description: "This vintage denim jacket is perfect for all seasons. Stylish, comfy, and sustainable.",
+      main_image: "images/jacket.jpeg",
+    },
+    {
+      id: 2,
+      name: "Classic Tee",
+      description: "Soft cotton T-shirt with a timeless look. Essential for any outfit.",
+      main_image: "images/tshirt.jpeg",
+    },
+    {
+      id: 3,
+      name: "Corduroy Pants",
+      description: "Comfy corduroy pants for a smart casual look. Warm and trendy.",
+      main_image: "images/shoes.jpeg",
+    },
+    {
+      id: 4,
+      name: "Canvas Sneakers",
+      description: "Durable and stylish sneakers for everyday wear.",
+      main_image: "images/shoes.jpeg",
+    }
+  ];
+
+  const productCards = document.querySelectorAll('.product-card');
+
+  productCards.forEach((card, index) => {
+    const product = products[index];
+    card.textContent = product.name; // Replace placeholder with actual name
+    card.addEventListener('click', () => {
+      localStorage.setItem('selectedProduct', JSON.stringify(product));
+      window.location.href = 'productpage.html'; // Your product detail page
+    });
+  });
+
+  const carouselImages = [
+    'images/banner1.jpg',
+    'images/banner2.jpg',
+    'images/banner3.jpg'
+  ];
+
+  let currentImage = 0;
+  const carousel = document.getElementById('carouselImage');
+
+  setInterval(() => {
+    currentImage = (currentImage + 1) % carouselImages.length;
+    carousel.src = carouselImages[currentImage];
+  }, 4000);
+</script>
+</body>
+</html>

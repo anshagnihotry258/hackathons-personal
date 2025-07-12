@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rewoven Admin Panel</title>
+  <!-- Import Poppins font -->
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+  />
+  <style>
+    /* CSS Variables for Light & Dark Modes & Typography */
+    :root {
+      --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana,
+        sans-serif;
+      --bg-page: #121212;
+      --bg-panel: #1e1e1e;
+      --bg-card: #282828;
+      --bg-input: #2a2a2a;
+      --text-primary: #e0e0e0;
+      --text-secondary: #bdbdbd;
+      --text-muted: #777;
+      --accent: #4caf50;
+      --border: #3a3a3a;
+    }
+    body.light {
+      --bg-page: #f5f5f5;
+      --bg-panel: #ffffff;
+      --bg-card: #fafafa;
+      --bg-input: #ededed;
+      --text-primary: #212121;
+      --text-secondary: #555555;
+      --text-muted: #999999;
+      --accent: #4caf50;
+      --border: #cccccc;
+    }
+
+    /* Reset & Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Admin Panel Container */
+    .admin-panel {
+      width: 100%;
+      max-width: 900px;
+      background-color: var(--bg-panel);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Top Bar with Logo and Controls */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand img.logo {
+      height: 40px;
+      width: auto;
+    }
+    .brand h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .search-input {
+      background-color: var(--bg-input);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 16px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      width: 200px;
+      transition: all 0.3s ease;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: var(--bg-panel);
+      color: var(--text-primary);
+    }
+
+    /* Dark/Light Toggle */
+    .theme-toggle {
+      position: relative;
+      width: 50px;
+      height: 24px;
+    }
+    .theme-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border);
+      border-radius: 34px;
+      transition: background-color 0.3s ease;
+    }
+    .slider::before {
+      position: absolute;
+      content: '';
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      top: 3px;
+      background-color: var(--bg-panel);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+    .theme-toggle input:checked + .slider {
+      background-color: var(--accent);
+    }
+    .theme-toggle input:checked + .slider::before {
+      transform: translateX(26px);
+    }
+
+    /* Nav Buttons */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    .nav-buttons button {
+      background-color: var(--bg-input);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 130px;
+    }
+    .nav-buttons button:hover,
+    .nav-buttons button.active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg-panel);
+    }
+
+    /* Section Title */
+    .section-title {
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 4px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      padding-left: 12px;
+      user-select: none;
+    }
+
+    /* Users List */
+    .users-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 0 12px 12px;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+    .users-list::-webkit-scrollbar {
+      width: 8px;
+    }
+    .users-list::-webkit-scrollbar-thumb {
+      background-color: var(--accent)aa;
+      border-radius: 8px;
+    }
+    .users-list::-webkit-scrollbar-track {
+      background-color: var(--bg-card);
+    }
+
+    /* User Card */
+    .user-card {
+      background-color: var(--bg-card);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      padding: 14px;
+      gap: 16px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease;
+    }
+    .user-card:hover {
+      transform: translateY(-2px);
+    }
+    .user-avatar {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: var(--bg-panel);
+      box-shadow: 0 0 8px var(--accent)aa;
+    }
+    .user-details {
+      flex-grow: 1;
+      background-color: var(--bg-panel);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      line-height: 1.4rem;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+      overflow-wrap: break-word;
+    }
+    .user-details strong {
+      color: var(--text-primary);
+    }
+    .user-details small {
+      color: var(--text-secondary);
+    }
+    .user-details em {
+      color: var(--text-muted);
+    }
+
+    /* Action Buttons */
+    .user-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 120px;
+    }
+    .user-actions button {
+      background-color: var(--bg-input);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 10px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    .user-actions button:hover {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg-panel);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .nav-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .nav-buttons button {
+        min-width: 100px;
+        flex-grow: 1;
+      }
+      .user-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .user-avatar {
+        margin-bottom: 8px;
+      }
+      .user-actions {
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .user-actions button {
+        flex-grow: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="admin-panel" role="main" aria-label="Admin Panel">
+    <div class="top-bar">
+      <div class="brand">
+        <img
+          src="a2d877f6-08f1-400e-9b6e-238239bf575a.png"
+          alt="Rewoven Logo"
+          class="logo"
+        />
+        <h1>Rewoven Admin Panel</h1>
+      </div>
+      <div class="controls">
+        <input
+          class="search-input"
+          type="search"
+          aria-label="Search users"
+          placeholder="Search users..."
+          id="searchUser"
+        />
+        <label class="theme-toggle" aria-label="Toggle light/dark mode">
+          <input type="checkbox" id="modeToggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <nav
+      class="nav-buttons"
+      role="navigation"
+      aria-label="Admin Panel Sections"
+    >
+      <button class="active" data-section="users" aria-current="page">
+        Manage Users
+      </button>
+      <button data-section="orders">Manage Orders</button>
+      <button data-section="listings">Manage Listings</button>
+    </nav>
+
+    <section class="section-title" id="sectionTitle">Manage Users</section>
+
+    <section
+      class="users-list"
+      id="userList"
+      aria-live="polite"
+      aria-relevant="all"
+    >
+      <!-- User cards will go here -->
+    </section>
+  </main>
+
+  <script>
+    // Theme persistence
+    const toggle = document.getElementById('modeToggle');
+    const currentMode = localStorage.getItem('theme') || 'dark';
+    if (currentMode === 'light') {
+      document.body.classList.add('light');
+      toggle.checked = true;
+    }
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        document.body.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.body.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Sample user data
+    const users = [
+      {
+        id: 1,
+        name: 'Alice Johnson',
+        email: 'alice.johnson@example.com',
+        role: 'Customer',
+        details: 'Customer since 2020. Last order 10 days ago.',
+      },
+      {
+        id: 2,
+        name: 'Bob Williams',
+        email: 'bob.williams@example.com',
+        role: 'Seller',
+        details: 'Top-rated seller. 250 products live.',
+      },
+      {
+        id: 3,
+        name: 'Chris Smith',
+        email: 'chris.smith@example.com',
+        role: 'Customer',
+        details: 'Customer since 2019. Preferred member.',
+      },
+      {
+        id: 4,
+        name: 'Diana Miller',
+        email: 'diana.miller@example.com',
+        role: 'Admin',
+        details: 'Site administrator. Last login 2 hours ago.',
+      },
+    ];
+
+    const userListEl = document.getElementById('userList');
+    const navButtons = document.querySelectorAll('.nav-buttons button');
+    const sectionTitle = document.getElementById('sectionTitle');
+    const searchInput = document.getElementById('searchUser');
+
+    function getInitials(name) {
+      return name
+        .split(' ')
+        .map((part) => part.charAt(0))
+        .join('')
+        .toUpperCase();
+    }
+
+    function createUserCard(user) {
+      const card = document.createElement('article');
+      card.className = 'user-card';
+      card.setAttribute('tabindex', 0);
+
+      const avatar = document.createElement('div');
+      avatar.className = 'user-avatar';
+      avatar.textContent = getInitials(user.name);
+
+      const details = document.createElement('section');
+      details.className = 'user-details';
+      details.innerHTML = `
+        <strong>${user.name}</strong><br/>
+        <small>${user.email}</small><br/>
+        <em>${user.details}</em>
+      `;
+
+      const actions = document.createElement('div');
+      actions.className = 'user-actions';
+      ['Action 1', 'Action 2'].forEach((txt) => {
+        const btn = document.createElement('button');
+        btn.textContent = txt;
+        btn.setAttribute('aria-label', `${txt} on user ${user.name}`);
+        btn.addEventListener('click', () => alert(`${txt} on ${user.name}`));
+        actions.appendChild(btn);
+      });
+
+      [avatar, details, actions].forEach((el) => card.appendChild(el));
+      return card;
+    }
+
+    function renderUserList(filter = '') {
+      userListEl.innerHTML = '';
+      const filtered = users.filter((u) =>
+        [u.name, u.email, u.role].some((v) =>
+          v.toLowerCase().includes(filter.toLowerCase())
+        )
+      );
+
+      if (filtered.length === 0) {
+        const div = document.createElement('div');
+        div.textContent = 'No users found matching your search.';
+        div.style.padding = '16px';
+        div.style.textAlign = 'center';
+        div.style.color = 'var(--text-muted)';
+        userListEl.appendChild(div);
+        return;
+      }
+
+      filtered.forEach((u) => userListEl.appendChild(createUserCard(u)));
+    }
+
+    // Navigation & Search
+    navButtons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        navButtons.forEach((b) => {
+          b.classList.remove('active');
+          b.removeAttribute('aria-current');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-current', 'page');
+
+        const sec = btn.dataset.section;
+        sectionTitle.textContent =
+          sec === 'users'
+            ? 'Manage Users'
+            : sec === 'orders'
+            ? 'Manage Orders'
+            : 'Manage Listings';
+
+        if (sec === 'users') renderUserList(searchInput.value.trim());
+        else {
+          userListEl.innerHTML = `<div style="color:var(--text-muted);height:300px;display:flex;align-items:center;justify-content:center;font-style:italic;">
+            Content for ${sectionTitle.textContent} will go here.
+          </div>`;
+        }
+      })
+    );
+
+    searchInput.addEventListener('input', (e) => {
+      if (
+        document.querySelector('.nav-buttons button.active').dataset.section !==
+        'users'
+      ) {
+        document
+          .querySelector('.nav-buttons button[data-section="users"]')
+          .click();
+      }
+      renderUserList(e.target.value.trim());
+    });
+
+    // Initial render
+    renderUserList();
+  </script>
+</body>
+</html>

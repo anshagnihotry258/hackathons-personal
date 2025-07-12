@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Dashboard - Rewoven Style</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --bg-page: #121212;
+      --bg-panel: #1e1e1e;
+      --bg-card: #282828;
+      --bg-input: #2a2a2a;
+      --text-primary: #e0e0e0;
+      --text-secondary: #bdbdbd;
+      --text-muted: #777;
+      --accent: #4caf50;
+      --border: #3a3a3a;
+    }
+    body.light {
+      --bg-page: #f5f5f5;
+      --bg-panel: #ffffff;
+      --bg-card: #fafafa;
+      --bg-input: #ededed;
+      --text-primary: #212121;
+      --text-secondary: #555555;
+      --text-muted: #999999;
+      --accent: #4caf50;
+      --border: #cccccc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Top Bar */
+    header.top-bar {
+      width: 100%;
+      max-width: 1000px;
+      background-color: var(--bg-panel);
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.7);
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .logo-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: var(--bg-panel);
+      font-weight: 700;
+      font-size: 1.6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 10px var(--accent)cc;
+    }
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    main.dashboard {
+      width: 100%;
+      max-width: 1000px;
+      background-color: var(--bg-panel);
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin: 16px 0 48px;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Top section: profile pic and details */
+    .top-section {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .profile-column {
+      flex-shrink: 0;
+      text-align: center;
+      width: 120px;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: var(--bg-panel);
+      font-weight: 700;
+      font-size: 2.6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 12px var(--accent)aa;
+      user-select: none;
+      margin-bottom: 10px;
+    }
+    .user-name {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    /* User details grid */
+    .details-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 14px 20px;
+    }
+
+    .detail-item {
+      background-color: var(--bg-card);
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .detail-item h4 {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent);
+      user-select: none;
+    }
+    .detail-item p {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      user-select: text;
+      word-break: break-word;
+    }
+
+    /* Description */
+    .description {
+      background-color: var(--bg-card);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.4rem;
+      user-select: text;
+    }
+
+    /* Purchases section */
+    .purchases-section {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Each row of purchases and header */
+    .purchase-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .purchase-row h3 {
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .review-btn {
+      background-color: var(--accent);
+      color: var(--bg-panel);
+      border: none;
+      border-radius: 10px;
+      padding: 8px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .review-btn:hover,
+    .review-btn:focus {
+      background-color: #3a913a;
+      outline: none;
+    }
+
+    /* Items grid 4 per row */
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      flex: 1 1 auto;
+      margin-top: 6px;
+    }
+
+    .item-card {
+      background-color: var(--bg-card);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      cursor: default;
+      transition: background-color 0.3s ease;
+    }
+    .item-image {
+      width: 62px;
+      height: 62px;
+      border-radius: 12px;
+      background-color: var(--accent);
+      box-shadow: 0 0 6px var(--accent)aa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--bg-panel);
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+    .item-name {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-align: center;
+      user-select: text;
+    }
+
+    /* Theme toggle fixed top right */
+    .theme-toggle-wrapper {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 10;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 50px;
+      height: 24px;
+    }
+    .theme-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border);
+      border-radius: 34px;
+      transition: background-color 0.3s ease;
+    }
+    .slider::before {
+      position: absolute;
+      content: '';
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      top: 3px;
+      background-color: var(--bg-panel);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+    .theme-toggle input:checked + .slider {
+      background-color: var(--accent);
+    }
+    .theme-toggle input:checked + .slider::before {
+      transform: translateX(26px);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 800px) {
+      .top-section {
+        flex-direction: column;
+        align-items: center;
+      }
+      .profile-column {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .details-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(4, auto);
+        gap: 14px 16px;
+        width: 100%;
+      }
+      .items-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .purchase-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .review-btn {
+        margin-top: 6px;
+      }
+    }
+    @media (max-width: 400px) {
+      .items-grid {
+        grid-template-columns: 1fr;
+      }
+      .details-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar" role="banner" aria-label="Rewoven top navigation bar">
+    <div class="logo-circle" aria-hidden="true">R</div>
+    <div class="logo-text">Rewoven Dashboard</div>
+  </header>
+
+  <main class="dashboard" role="main" aria-label="User dashboard">
+    <!-- Top Section: Profile + Details -->
+    <section class="top-section">
+      <div class="profile-column" aria-label="User profile">
+        <div class="profile-pic" aria-hidden="true">JD</div>
+        <div class="user-name" aria-label="User full name">John Doe</div>
+      </div>
+
+      <div class="details-grid" aria-label="User details grid">
+        <div class="detail-item" aria-label="Email address">
+          <h4>Email</h4>
+          <p>john.doe@example.com</p>
+        </div>
+        <div class="detail-item" aria-label="Phone number">
+          <h4>Phone</h4>
+          <p>+1 (555) 123-4567</p>
+        </div>
+        <div class="detail-item" aria-label="Location">
+          <h4>Location</h4>
+          <p>San Francisco, CA</p>
+        </div>
+        <div class="detail-item" aria-label="Membership status">
+          <h4>Membership</h4>
+          <p>Premium Member</p>
+        </div>
+        <div class="detail-item" aria-label="Joined date">
+          <h4>Joined</h4>
+          <p>March 15, 2021</p>
+        </div>
+        <div class="detail-item" aria-label="Last login">
+          <h4>Last Login</h4>
+          <p>July 10, 2025</p>
+        </div>
+        <div class="detail-item" aria-label="Favorite category">
+          <h4>Favorite Category</h4>
+          <p>Furniture</p>
+        </div>
+        <div class="detail-item" aria-label="Reward points">
+          <h4>Reward Points</h4>
+          <p>1,250 pts</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Description -->
+    <section class="description" aria-label="User description">
+      John is an avid collector of vintage furniture and modern art pieces. Loves to discover unique items and has been a loyal member of our platform for over 4 years.
+    </section>
+
+    <!-- Purchases and Listed items -->
+    <section class="purchases-section" aria-label="User purchases and listings">
+
+      <div class="purchase-row" aria-label="Listed purchases">
+        <h3>Listed Items</h3>
+        <div class="review-btn" role="button" tabindex="0" aria-label="Review listed items">Review</div>
+      </div>
+
+      <div class="items-grid" aria-label="Grid of listed items">
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">LC1</div>
+          <div class="item-name">Vintage Chair</div>
+        </div>
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">LC2</div>
+          <div class="item-name">Antique Lamp</div>
+        </div>
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">LC3</div>
+          <div class="item-name">Wooden Desk</div>
+        </div>
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">LC4</div>
+          <div class="item-name">Decorative Vase</div>
+        </div>
+      </div>
+
+      <div class="purchase-row" aria-label="Purchased items">
+        <h3>Purchases</h3>
+      </div>
+
+      <div class="items-grid" aria-label="Grid of purchased items">
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">P1</div>
+          <div class="item-name">Modern Sofa</div>
+        </div>
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">P2</div>
+          <div class="item-name">Abstract Painting</div>
+        </div>
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">P3</div>
+          <div class="item-name">Floor Lamp</div>
+        </div>
+        <div class="item-card" tabindex="0">
+          <div class="item-image" aria-hidden="true">P4</div>
+          <div class="item-name">Coffee Table</div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Theme toggle fixed top right -->
+  <div class="theme-toggle-wrapper" aria-label="Toggle light and dark mode">
+    <label class="theme-toggle" for="toggleTheme">
+      <input type="checkbox" id="toggleTheme" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <script>
+    // Theme toggle with persistence
+    const reviewButton = document.querySelector('.review-btn')
+    const toggleTheme = document.getElementById('toggleTheme');
+    const body = document.body;
+
+    if (localStorage.getItem('rewoven-theme') === 'light') {
+      body.classList.add('light');
+      toggleTheme.checked = true;
+    }
+
+    toggleTheme.addEventListener('change', () => {
+      if (toggleTheme.checked) {
+        body.classList.add('light');
+        localStorage.setItem('rewoven-theme', 'light');
+      } else {
+        body.classList.remove('light');
+        localStorage.setItem('rewoven-theme', 'dark');
+      }
+    });
+    reviewButton.addEventListener('click', () => {
+      window.location.href = 'review.html'
+    })
+  </script>
+</body>
+</html>
