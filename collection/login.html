@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReWoven | Welcome</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1617957742471-8a448cd1dcf9') center/cover no-repeat;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #3f5d45;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #6b4f3f;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.7rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #3f5d45;
+      color: white;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #2e4232;
+    }
+
+    .toggle {
+      color: #6b4f3f;
+      margin-top: 1rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .oauth {
+      margin: 1rem 0;
+    }
+
+    .oauth button {
+      background: white;
+      color: #333;
+      border: 1px solid #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .oauth img {
+      width: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="form-container">
+    <!-- Will be filled by JS -->
+  </div>
+
+  <script>
+    const container = document.getElementById("form-container");
+    const API = "http://127.0.0.1:8000"; // Change if hosted
+
+    async function loginHandler(e) {
+      e.preventDefault();
+      const inputs = e.target.elements;
+      const email = inputs[0].value.trim();
+      const password = inputs[1].value.trim();
+
+      // Admin shortcut
+      if (email === "admin" && password === "admin") {
+        alert("Admin login successful!");
+        window.location.href = "admin.html"; // <-- Add your admin page here
+        return;
+      }
+
+      // Dummy shortcut
+      if (email === "dummy" && password === "password") {
+        alert("Dummy login successful!");
+        window.location.href = "landing_page.html";
+        return;
+      }
+
+      const payload = { email, password };
+
+      const res = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
+        alert("Logged in successfully!");
+        window.location.href = "landing_page.html";
+      } else {
+        const err = await res.json();
+        alert("That combo doesn’t fit. Try a different username or password!");
+      }
+    }
+
+    function renderLogin() {
+      container.innerHTML = `
+        <h1>Welcome Back, Trendsetter!</h1>
+        <p>Give clothes a second chance—and get rewarded in style.</p>
+        <form onsubmit="loginHandler(event)">
+          <input type="email" placeholder="Email" required />
+          <input type="password" placeholder="Password" required />
+          <button type="submit">Log In</button>
+        </form>
+
+        <div class="oauth">
+          <button onclick="oauthLogin('google')">
+            <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" />
+            Continue with Google
+          </button>
+          <button onclick="oauthLogin('apple')">
+            <img src="https://cdn-icons-png.flaticon.com/512/179/179309.png" />
+            Continue with Apple
+          </button>
+        </div>
+
+        <div class="toggle" onclick="renderSignup()">Don't have an account? Sign Up</div>
+      `;
+    }
+
+    function renderSignup() {
+      container.innerHTML = `
+        <h1>Join the Swap Squad.</h1>
+        <p>Turn your old fits into fresh finds!</p>
+        <form onsubmit="signupHandler(event)">
+          <input type="text" placeholder="First Name" required />
+          <input type="text" placeholder="Last Name" required />
+          <input type="text" placeholder="Phone Number" required />
+          <input type="email" placeholder="Email" required />
+          <input type="password" placeholder="Password" required />
+          <input type="password" placeholder="Confirm Password" required />
+          <button type="submit">Sign Up</button>
+        </form>
+
+        <div class="oauth">
+          <button onclick="oauthLogin('google')">
+            <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" />
+            Sign up with Google
+          </button>
+          <button onclick="oauthLogin('apple')">
+            <img src="https://cdn-icons-png.flaticon.com/512/179/179309.png" />
+            Sign up with Apple
+          </button>
+        </div>
+
+        <div class="toggle" onclick="renderLogin()">Already have an account? Log In</div>
+      `;
+    }
+
+    async function signupHandler(e) {
+      e.preventDefault();
+      const inputs = e.target.elements;
+      const payload = {
+        first_name: inputs[0].value,
+        last_name: inputs[1].value,
+        phone: inputs[2].value,
+        email: inputs[3].value,
+        password: inputs[4].value,
+        confirm_password: inputs[5].value
+      };
+
+      if (payload.password !== payload.confirm_password) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      alert("Sign up functionality is under development."); // Placeholder
+    }
+
+    function oauthLogin(provider) {
+      window.location.href = `${API}/auth/${provider}`;
+    }
+
+    // Initial render
+    window.onload = () => {
+      const token = localStorage.getItem("access_token");
+      if (token) {
+        alert("Welcome back!");
+        window.location.href = "landing_page.html"; // or dashboard
+      } else {
+        renderLogin();
+      }
+    };
+  </script>
+</body>
+</html>
