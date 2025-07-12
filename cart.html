@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .profile {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .product {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    .product button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .add-product {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .add-product input {
+      padding: 8px;
+      width: 100%;
+    }
+    .add-product button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Cart</h1>
+    <div class="profile">User: John Doe</div>
+  </header>
+
+  <div class="container">
+    <h2>Cart Items</h2>
+    <div id="cartItems"></div>
+
+    <h3>Add Product</h3>
+    <div class="add-product">
+      <input type="number" id="productId" placeholder="Product ID" />
+      <input type="number" id="quantity" placeholder="Quantity" />
+      <button onclick="addToCart()">Add</button>
+    </div>
+  </div>
+
+  <script>
+    async function loadCart() {
+      const res = await fetch('http://localhost:8002/api/cart');
+      const cart = await res.json();
+      const container = document.getElementById('cartItems');
+      container.innerHTML = '';
+      cart.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.innerHTML = `
+          <span>Product ID: ${item.product_id} | Quantity: ${item.quantity}</span>
+          <button onclick="removeFromCart(${item.product_id})">Remove</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function addToCart() {
+      const productId = document.getElementById('productId').value;
+      const quantity = document.getElementById('quantity').value;
+      await fetch('http://localhost:8002/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: parseInt(productId), quantity: parseInt(quantity) })
+      });
+      loadCart();
+    }
+
+    async function removeFromCart(productId) {
+      await fetch('http://localhost:8002/api/cart/remove', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: productId, quantity: 0 })
+      });
+      loadCart();
+    }
+
+    loadCart();
+  </script>
+</body>
+</html>
