@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rewoven Admin Panel</title>
-  <!-- Import Poppins font -->
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
   />
   <style>
-    /* CSS Variables for Light & Dark Modes & Typography */
     :root {
       --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana,
         sans-serif;
@@ -35,8 +33,6 @@
       --accent: #4caf50;
       --border: #cccccc;
     }
-
-    /* Reset & Base */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -53,7 +49,6 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* Admin Panel Container */
     .admin-panel {
       width: 100%;
       max-width: 900px;
@@ -67,7 +62,7 @@
       transition: background-color 0.3s ease;
     }
 
-    /* Top Bar with Logo and Controls */
+
     .top-bar {
       display: flex;
       align-items: center;
@@ -110,7 +105,7 @@
       color: var(--text-primary);
     }
 
-    /* Dark/Light Toggle */
+
     .theme-toggle {
       position: relative;
       width: 50px;
@@ -150,7 +145,6 @@
       transform: translateX(26px);
     }
 
-    /* Nav Buttons */
     .nav-buttons {
       display: flex;
       justify-content: center;
@@ -174,7 +168,7 @@
       color: var(--bg-panel);
     }
 
-    /* Section Title */
+  
     .section-title {
       border-bottom: 2px solid var(--accent);
       padding-bottom: 4px;
@@ -184,7 +178,7 @@
       user-select: none;
     }
 
-    /* Users List */
+
     .users-list {
       display: flex;
       flex-direction: column;
@@ -204,7 +198,7 @@
       background-color: var(--bg-card);
     }
 
-    /* User Card */
+  
     .user-card {
       background-color: var(--bg-card);
       border-radius: 12px;
@@ -252,7 +246,7 @@
       color: var(--text-muted);
     }
 
-    /* Action Buttons */
+
     .user-actions {
       display: flex;
       flex-direction: column;
@@ -276,7 +270,6 @@
       color: var(--bg-panel);
     }
 
-    /* Responsive */
     @media (max-width: 600px) {
       .nav-buttons {
         flex-wrap: wrap;
@@ -352,12 +345,12 @@
       aria-live="polite"
       aria-relevant="all"
     >
-      <!-- User cards will go here -->
+
     </section>
   </main>
 
   <script>
-    // Theme persistence
+    
     const toggle = document.getElementById('modeToggle');
     const currentMode = localStorage.getItem('theme') || 'dark';
     if (currentMode === 'light') {
@@ -374,7 +367,7 @@
       }
     });
 
-    // Sample user data
+   
     const users = [
       {
         id: 1,
@@ -470,8 +463,6 @@
 
       filtered.forEach((u) => userListEl.appendChild(createUserCard(u)));
     }
-
-    // Navigation & Search
     navButtons.forEach((btn) =>
       btn.addEventListener('click', () => {
         navButtons.forEach((b) => {
@@ -509,8 +500,6 @@
       }
       renderUserList(e.target.value.trim());
     });
-
-    // Initial render
     renderUserList();
   </script>
 </body>
