@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rewoven Dashboard</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='a2d877f6-08f1-400e-9b6e-238239bf575a.png') }}">
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #222;
+      --card-bg: #f5f5f5;
+      --highlight: #42b883;
+      --paragraph-bg: #eaeaea;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #ffffff;
+      --card-bg: #1e1e1e;
+      --paragraph-bg: #1a1a1a;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .dashboard {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      background: var(--paragraph-bg);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--highlight);
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-title img {
+      width: 40px;
+      border-radius: 8px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .slider {
+      width: 50px;
+      height: 24px;
+      background: #ccc;
+      border-radius: 24px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: yellow;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: 0.3s;
+    }
+
+    input:checked + .slider {
+      background: var(--highlight);
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(26px);
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    .profile img {
+      width: 90px;
+      border-radius: 50%;
+      margin-right: 20px;
+      border: 3px solid var(--highlight);
+    }
+
+    .section-title {
+      font-size: 1.4em;
+      margin: 30px 0 12px;
+      border-left: 6px solid var(--highlight);
+      padding-left: 10px;
+    }
+
+    .items, .swaps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 14px;
+      border-radius: 10px;
+      width: 180px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      margin: 4px 0;
+    }
+
+    .swap-list {
+      flex: 1;
+    }
+
+    .swap-list h3 {
+      margin-bottom: 10px;
+      border-bottom: 2px solid var(--highlight);
+      padding-bottom: 6px;
+    }
+
+    .swap-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .swap-list li {
+      background: var(--card-bg);
+      margin-bottom: 8px;
+      padding: 12px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="dashboard">
+    <div class="header">
+      <div class="logo-title">
+        <img src="{{ url_for('static', filename='a2d877f6-08f1-400e-9b6e-238239bf575a.png') }}" alt="Rewoven Logo">
+        <h1>Rewoven Dashboard</h1>
+      </div>
+      <label class="toggle">
+        Dark Mode
+        <input type="checkbox" id="themeToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <section class="profile">
+      <img src="{{ url_for('static', filename='profile.png') }}" alt="Profile Picture">
+      <div>
+        <h2>John Doe</h2>
+        <p>Email: johndoe@example.com</p>
+        <p>Member Since: January 2021</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Uploaded Items</h2>
+    <div class="items">
+      <div class="card">
+        <img src="{{ url_for('static', filename='tshirt.jpeg') }}" alt="T-shirt">
+        <p><strong>T-shirt</strong></p>
+        <p style="color: var(--highlight);">Available</p>
+      </div>
+      <div class="card">
+        <img src="{{ url_for('static', filename='shoes.jpeg') }}" alt="Shoes">
+        <p><strong>Shoes</strong></p>
+        <p style="color: var(--highlight);">Available</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Swaps</h2>
+    <div class="swaps">
+      <div class="swap-list">
+        <h3>Ongoing Swaps</h3>
+        <ul>
+          <li><span>Smartwatch</span><span>With Alice</span><span style="color: orange;">In Progress</span></li>
+        </ul>
+      </div>
+      <div class="swap-list">
+        <h3>Completed Swaps</h3>
+        <ul>
+          <li><span>Winter Jacket</span><span>With Bob</span><span>Completed</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    toggle.checked = true;
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    });
+  </script>
+</body>
+</html>
